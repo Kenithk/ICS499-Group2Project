@@ -1,17 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { HashRouter as Router, Route, NavLink } from "react-router-dom";
+import SignUpForm from "./pages/SignUpForm";
+import SignInForm from "./pages/SignInForm";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Pharmacy Web App
-        </p>
-      </header>
-    </div>
-  );
+import "./App.css";
+
+class App extends Component {
+  render() {
+    return (
+      <Router basename="/react-auth-ui/">
+        <div className="App">
+          <div className="appAside" />
+          <div className="appForm">
+            <div className="pageSwitcher">
+              <NavLink
+                to="/sign-in"
+                activeClassName="pageSwitcherItem-active"
+                className="pageSwitcherItem"
+              >
+                Sign In
+              </NavLink>
+              <NavLink
+                exact
+                to="/"
+                activeClassName="pageSwitcherItem-active"
+                className="pageSwitcherItem"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+
+            <div className="formTitle">
+              <NavLink
+                to="/sign-in"
+                activeClassName="formTitleLink-active"
+                className="formTitleLink"
+              >
+                Sign In
+              </NavLink>{" "}
+              or{" "}
+              <NavLink
+                exact
+                to="/"
+                activeClassName="formTitleLink-active"
+                className="formTitleLink"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+
+            <Route exact path="/" component={SignUpForm} />
+            <Route path="/sign-in" component={SignInForm} />
+          </div>
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;
