@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { HashRouter as Router, Route, NavLink } from "react-router-dom";
+import Home from "./pages/Home";
 import SignUpForm from "./pages/SignUpForm";
 import SignInForm from "./pages/SignInForm";
 
@@ -22,7 +23,7 @@ class App extends Component {
               </NavLink>
               <NavLink
                 exact
-                to="/"
+                to="/sign-up"
                 activeClassName="pageSwitcherItem-active"
                 className="pageSwitcherItem"
               >
@@ -41,7 +42,7 @@ class App extends Component {
               or{" "}
               <NavLink
                 exact
-                to="/"
+                to="/sign-up"
                 activeClassName="formTitleLink-active"
                 className="formTitleLink"
               >
@@ -49,8 +50,10 @@ class App extends Component {
               </NavLink>
             </div>
 
-            <Route exact path="/" component={SignUpForm} />
-            <Route path="/sign-in" component={SignInForm} />
+            
+            <Route exact path="/sign-in" component={SignInForm} />
+            <Route path="/sign-up" component={SignUpForm} />
+            <Route path="/" component={Home} />
           </div>
         </div>
       </Router>

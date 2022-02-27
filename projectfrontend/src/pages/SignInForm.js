@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
-  FacebookLoginButton,
-  InstagramLoginButton
+  LinkedInLoginButton,
+  GithubLoginButton
 } from "react-social-login-buttons";
 
 class SignInForm extends Component {
@@ -77,12 +77,12 @@ class SignInForm extends Component {
           </div>
 
           <div className="socialMediaButtons">
-            <div className="facebookButton">
-              <FacebookLoginButton onClick={() => alert("Hello")} />
+            <div className="linkedInButton">
+              < LinkedInLoginButton onClick={() => alert("Not implemented yet!")} />
             </div>
 
             <div className="instagramButton">
-              <InstagramLoginButton onClick={() => alert("Hello")} />
+              <GithubLoginButton onClick={() => alert("Not implemented yet!")} />
             </div>
           </div>
         </form>

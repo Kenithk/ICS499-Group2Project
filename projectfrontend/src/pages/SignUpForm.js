@@ -131,6 +131,19 @@ class SignUpForm extends Component {
                 value={this.state.hasAgreed}
                 onChange={this.handleChange}
               />{" "}
+              Employee {" "}
+            </label>
+          </div>
+
+          <div className="formField">
+            <label className="formFieldCheckboxLabel">
+              <input
+                className="formFieldCheckbox"
+                type="checkbox"
+                name="hasAgreed"
+                value={this.state.hasAgreed}
+                onChange={this.handleChange}
+              />{" "}
               I agree all statements in{" "}
               <a href="null" className="formFieldTermsLink">
                 terms of service
