@@ -81,7 +81,7 @@ class SignInForm extends Component {
               < LinkedInLoginButton onClick={() => alert("Not implemented yet!")} />
             </div>
 
-            <div className="instagramButton">
+            <div className="githubButton">
               <GithubLoginButton onClick={() => alert("Not implemented yet!")} />
             </div>
           </div>
