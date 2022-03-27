@@ -15,7 +15,6 @@ import BoardAdmin from "./components/board-admin.component";
 import OrdersList from "./components/orders-list.component";
 import AddOrder from "./components/add-order.component";
 import Order from "./components/order.component";
-import UsersList from "./components/user-list.component";
 import User from "./components/order.component";
 
 // import AuthVerify from "./common/auth-verify";
@@ -156,7 +155,6 @@ class App extends Component {
             <Route exact path={["/", "/orders"]} component={OrdersList} />
             <Route exact path="/add" component={AddOrder} />
             <Route path="/orders/:id" component={Order} />
-            <Route exact path={["/", "/users"]} component={UsersList} />
             <Route path="/orders/:id" component={User} />
           </Switch>
         </div>
