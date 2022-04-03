@@ -1,27 +1,22 @@
 package com.backend.springjwt.security.services;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
+
+import org.springframework.security.core.*;
+import org.springframework.security.core.authority.*;
+import org.springframework.security.core.userdetails.*;
 
 import com.backend.springjwt.models.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
 
   private Long id;
-
   private String username;
-
   private String email;
-
-  @JsonIgnore
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   private Collection<? extends GrantedAuthority> authorities;
@@ -41,10 +36,10 @@ public class UserDetailsImpl implements UserDetails {
         .collect(Collectors.toList());
 
     return new UserDetailsImpl(
-        user.getId(), 
-        user.getUsername(), 
+        user.getId(),
+        user.getUsername(),
         user.getEmail(),
-        user.getPassword(), 
+        user.getPassword(),
         authorities);
   }
 
@@ -99,5 +94,5 @@ public class UserDetailsImpl implements UserDetails {
       return false;
     UserDetailsImpl user = (UserDetailsImpl) o;
     return Objects.equals(id, user.id);
-  }
+    }
 }

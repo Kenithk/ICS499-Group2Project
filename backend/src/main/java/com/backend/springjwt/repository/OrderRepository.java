@@ -1,12 +1,13 @@
 package com.backend.springjwt.repository;
 
+import java.util.*;
 
-import com.backend.springjwt.models.Order;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 
-import java.util.List;
+import com.backend.springjwt.models.*;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
         List<Order> findByCompleted(boolean completed);
         List<Order> findByTitleContaining(String title);
-        }
+        List<Order> findByUserId(Long userId);
+}

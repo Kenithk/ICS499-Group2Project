@@ -1,22 +1,20 @@
 package com.backend.springjwt.security.jwt;
 
-import java.io.IOException;
+import java.io.*;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import com.backend.springjwt.security.services.UserDetailsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.web.authentication.*;
+import org.springframework.util.*;
+import org.springframework.web.filter.*;
+
+import com.backend.springjwt.security.services.*;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired
@@ -25,6 +23,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
 
+  @SuppressWarnings("hiding")
   private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
   @Override

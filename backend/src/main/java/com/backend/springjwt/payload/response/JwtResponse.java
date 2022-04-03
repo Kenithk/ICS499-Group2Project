@@ -1,6 +1,6 @@
 package com.backend.springjwt.payload.response;
 
-import java.util.List;
+import java.util.*;
 
 public class JwtResponse {
   private String token;

@@ -1,25 +1,14 @@
 package com.backend.springjwt.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import com.backend.springjwt.models.Order;
-import com.backend.springjwt.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
+import org.springframework.security.access.prepost.*;
+import org.springframework.web.bind.annotation.*;
+
+import com.backend.springjwt.models.*;
+import com.backend.springjwt.repository.*;
 
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -28,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     @Autowired
     OrderRepository orderRepository;
+
     @GetMapping("/orders")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Order>> getAllOrders(@RequestParam(required = false) String title) {
         try {
-            List<Order> orders = new ArrayList<Order>();
+            List<Order> orders = new ArrayList<>();
             if (title == null)
                 orderRepository.findAll().forEach(orders::add);
             else
@@ -45,9 +35,10 @@ public class OrderController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/orders/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Order> getOrderById(@PathVariable("id") long id) {
+    public ResponseEntity<Order> getOrderById(@PathVariable("id") Long id) {
         Optional<Order> orderData = orderRepository.findById(id);
         if (orderData.isPresent()) {
             return new ResponseEntity<>(orderData.get(), HttpStatus.OK);
@@ -55,6 +46,22 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    //Not sure if this one is working fine
+    @GetMapping("/orders/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Order>> getOrderByUserId(@PathVariable("id") Long id) {
+        try {
+            List<Order> orders = orderRepository.findByUserId(id);
+            if (orders.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/orders")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
@@ -66,6 +73,7 @@ public class OrderController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PutMapping("/orders/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") long id, @RequestBody Order order) {
@@ -80,6 +88,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @DeleteMapping("/orders/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteOrder(@PathVariable("id") long id) {
@@ -90,6 +99,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @DeleteMapping("/orders")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteAllOrders() {
@@ -100,6 +110,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/orders/completed")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Order>> findByCompleted() {

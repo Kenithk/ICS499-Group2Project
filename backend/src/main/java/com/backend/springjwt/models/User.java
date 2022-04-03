@@ -1,22 +1,20 @@
 package com.backend.springjwt.models;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
-@Table(name = "users", 
-    uniqueConstraints = { 
+@Table(name = "users",
+    uniqueConstraints = {
       @UniqueConstraint(columnNames = "username"),
-      @UniqueConstraint(columnNames = "email") 
+      @UniqueConstraint(columnNames = "email")
     })
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usid_generator")
+  @SequenceGenerator(name = "usid_generator", initialValue = 1000, allocationSize = 1, sequenceName = "usid_seq")
   private Long id;
 
   @NotBlank
@@ -33,8 +31,8 @@ public class User {
   private String password;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(  name = "user_roles", 
-        joinColumns = @JoinColumn(name = "user_id"), 
+  @JoinTable(  name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 

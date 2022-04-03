@@ -1,6 +1,6 @@
 package com.backend.springjwt.payload.request;
 
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.constraints.*;
 
