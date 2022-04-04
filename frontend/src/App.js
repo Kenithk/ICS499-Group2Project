@@ -65,7 +65,7 @@ class App extends Component {
 
     return (
       <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <nav className="navbar navbar-expand navbar-light bg-light">
           <Link to={"/"} className="navbar-brand">
             PScription
           </Link>
@@ -96,9 +96,6 @@ class App extends Component {
                 </li></><li className="nav-item">
                   <Link to={"/add"} className="nav-link">
                     Create Order
-                  </Link>
-                  <Link to={"/users"} className="nav-link">
-                    User List
                   </Link>
                 </li></>
             )}
@@ -151,7 +148,7 @@ class App extends Component {
             <Route path="/user" component={BoardUser} />
             <Route path="/mod" component={BoardModerator} />
             <Route path="/admin" component={BoardAdmin} />
-            <Route exact path={["/", "/orders"]} component={OrdersList} />
+            <Route exact path={"/orders"} component={OrdersList} />
             <Route exact path="/add" component={AddOrder} />
             <Route path="/orders/:id" component={Order} />
           </Switch>

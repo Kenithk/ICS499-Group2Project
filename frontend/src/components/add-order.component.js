@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import OrderDataService from "../services/order.service";
+import "bootstrap/dist/css/bootstrap.min.css";
 export default class AddOrder extends Component {
   constructor(props) {
     super(props);

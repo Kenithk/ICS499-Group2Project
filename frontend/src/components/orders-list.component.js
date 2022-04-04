@@ -8,7 +8,7 @@ export default class OrdersList extends Component {
     this.retrieveOrders = this.retrieveOrders.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveOrder = this.setActiveOrder.bind(this);
-    this.removeAllOrders = this.removeAllOrders.bind(this);
+    //this.removeAllOrders = this.removeAllOrders.bind(this);
     this.searchTitle = this.searchTitle.bind(this);
     this.state = {
       orders: [],
@@ -51,16 +51,16 @@ export default class OrdersList extends Component {
       currentIndex: index
     });
   }
-  removeAllOrders() {
-    OrderDataService.deleteAll()
-      .then(response => {
-        console.log(response.data);
-        this.refreshList();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
+  //removeAllOrders() {
+    //OrderDataService.deleteAll()
+      //.then(response => {
+        //console.log(response.data);
+        //this.refreshList();
+      //})
+      //.catch(e => {
+        //console.log(e);
+      //});
+  //}
   searchTitle() {
     OrderDataService.findByTitle(this.state.searchTitle)
       .then(response => {
@@ -114,12 +114,6 @@ export default class OrdersList extends Component {
                 </li>
               ))}
           </ul>
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllOrders}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           {currentOrder ? (
@@ -141,7 +135,7 @@ export default class OrdersList extends Component {
                 <label>
                   <strong>Status:</strong>
                 </label>{" "}
-                {currentOrder.completed ? "completed" : "Pending"}
+                {currentOrder.completed ? "Completed" : "Pending"}
               </div>
               <Link
                 to={"/orders/" + currentOrder.id}
