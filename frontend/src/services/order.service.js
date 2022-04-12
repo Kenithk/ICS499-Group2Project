@@ -3,25 +3,35 @@ import http from "../http-common";
 
 class OrderDataService {
   getAll() {
-    return http.get("/orders", { headers: authHeader() });
+    return http.get(`/orders/getAll`, { headers: authHeader() });
   }
-  get(id) {
-    return http.get(`/orders/${id}`, { headers: authHeader() });
+  getById(id) {
+    return http.get(`/orders/get/id/${id}`, { headers: authHeader() });
+  }
+  getByUserId(id) {
+    return http.get(`/orders/get/userid/${id}`, { headers: authHeader() });
+  }
+  getByTitle(title) {
+    return http.get(`/orders/get/title/${title}`, { headers: authHeader() });
+  }
+  getByCompleted() {
+    return http.get(`/orders/get/completed/`, { headers: authHeader() });
   }
   create(data) {
-    return http.post("/orders", data, { headers: authHeader() });
+    return http.post(`/orders/create`, data, { headers: authHeader() });
   }
   update(id, data) {
-    return http.put(`/orders/${id}`, data, { headers: authHeader() });
+    return http.put(`/orders/update/${id}`, data, { headers: authHeader() });
   }
   delete(id) {
-    return http.delete(`/orders/${id}`, { headers: authHeader() });
+    return http.delete(`/orders/delete/${id}`, { headers: authHeader() });
   }
   deleteAll() {
-    return http.delete(`/orders`, { headers: authHeader() });
+    return http.delete(`/orders/deleteAll`, { headers: authHeader() });
   }
-  findByTitle(title) {
-    return http.get(`/orders?title=${title}`, { headers: authHeader() });
+  getUserId() {
+    
   }
+ 
 }
 export default new OrderDataService();

@@ -5,7 +5,6 @@ import AuthService from "../services/auth.service";
 export default class Profile extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       redirect: null,
       userReady: false,
@@ -33,23 +32,25 @@ export default class Profile extends Component {
         <div>
         <header className="jumbotron">
           <h3>
-            <strong>{currentUser.username}</strong> Profile
+            <strong>My PScription Profile</strong>
           </h3>
         </header>
         <p>
-          <strong>Token:</strong>{" "}
-          {currentUser.accessToken.substring(0, 20)} ...{" "}
-          {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+          <strong>Personal Information</strong>{" "}
         </p>
         <p>
-          <strong>Id:</strong>{" "}
+          <strong>Username:</strong>{" "}
+          {currentUser.username}
+        </p>
+        <p>
+          <strong>User ID:</strong>{" "}
           {currentUser.id}
         </p>
         <p>
           <strong>Email:</strong>{" "}
           {currentUser.email}
         </p>
-        <strong>Authorities:</strong>
+        <strong>Assigned role(s):</strong>
         <ul>
           {currentUser.roles &&
             currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}

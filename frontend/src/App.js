@@ -9,12 +9,10 @@ import Login from "./components/login.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
-import BoardUser from "./components/board-user.component";
-import BoardModerator from "./components/board-moderator.component";
-import BoardAdmin from "./components/board-admin.component";
-import OrdersList from "./components/orders-list.component";
-import AddOrder from "./components/add-order.component";
-import Order from "./components/order.component";
+import PersonalOrders from "./components/personal-orders.component"
+import ManageUsers from "./components/manage-users.component";
+import ManageOrders from "./components/manage-orders.component";
+import CreateOrder from "./components/create-order.component";
 
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
@@ -27,6 +25,7 @@ class App extends Component {
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
+      showUserBoard: false,
       currentUser: undefined,
     };
   }
@@ -39,6 +38,7 @@ class App extends Component {
         currentUser: user,
         showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+        showUserBoard: user.roles.includes("ROLE_USER")
       });
     }
     
@@ -56,12 +56,13 @@ class App extends Component {
     this.setState({
       showModeratorBoard: false,
       showAdminBoard: false,
+      showUserBoard: false,
       currentUser: undefined,
     });
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showModeratorBoard, showAdminBoard, showUserBoard } = this.state;
 
     return (
       <div>
@@ -75,40 +76,49 @@ class App extends Component {
                 Home
               </Link>
             </li>
-
-            {showModeratorBoard && (
+            
+            {currentUser && (
               <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
+                <Link to={"/profile"} className="nav-link">
+                  Profile
                 </Link>
               </li>
+            )}
+            
+            {showUserBoard && (
+              <li className="nav-item">
+                <Link to={"/myorders"} className="nav-link">
+                  My Orders
+                </Link>
+              </li>
+            )}
+
+            {showModeratorBoard && (
+             <><><li className="nav-item">
+              <Link to={"/manageorders"} className="nav-link">
+                Manage Orders
+              </Link>
+            </li></><li className="nav-item">
+              <Link to={"/createorder"} className="nav-link">
+                Create Order
+              </Link>
+            </li></>
             )}
 
             {showAdminBoard && (
               <><><li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
-                  Admin Board
+                <Link to={"/manageusers"} className="nav-link">
+                  Manage Users
                 </Link>
               </li><li className="nav-item">
-                  <Link to={"/orders"} className="nav-link">
-                    Orders
+                  <Link to={"/manageorders"} className="nav-link">
+                    Manage Orders
                   </Link>
                 </li></><li className="nav-item">
-                  <Link to={"/add"} className="nav-link">
+                  <Link to={"/createorder"} className="nav-link">
                     Create Order
                   </Link>
-                  <Link to={"/users"} className="nav-link">
-                    User List
-                  </Link>
                 </li></>
-            )}
-
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
             )}
           </div>
 
@@ -121,7 +131,7 @@ class App extends Component {
               </li>
               <li className="nav-item">
                 <a href="/login" className="nav-link" onClick={this.logOut}>
-                  LogOut
+                  Sign out
                 </a>
               </li>
             </div>
@@ -129,13 +139,13 @@ class App extends Component {
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link to={"/login"} className="nav-link">
-                  Login
+                  Sign in
                 </Link>
               </li>
 
               <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
-                  Sign Up
+                  Sign up
                 </Link>
               </li>
             </div>
@@ -148,12 +158,10 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
-            <Route path="/user" component={BoardUser} />
-            <Route path="/mod" component={BoardModerator} />
-            <Route path="/admin" component={BoardAdmin} />
-            <Route exact path={["/", "/orders"]} component={OrdersList} />
-            <Route exact path="/add" component={AddOrder} />
-            <Route path="/orders/:id" component={Order} />
+            <Route exact path="/myorders" component={PersonalOrders} />
+            <Route path="/manageusers" component={ManageUsers} />
+            <Route exact path={["/", "/manageorders"]} component={ManageOrders} />
+            <Route exact path="/createorder" component={CreateOrder} />
           </Switch>
         </div>
 
