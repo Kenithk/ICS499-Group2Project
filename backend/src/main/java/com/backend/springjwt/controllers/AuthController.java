@@ -1,32 +1,26 @@
 package com.backend.springjwt.controllers;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
-import javax.validation.Valid;
+import javax.validation.*;
 
-import com.backend.springjwt.models.ERole;
-import com.backend.springjwt.models.Role;
-import com.backend.springjwt.models.User;
-import com.backend.springjwt.payload.request.LoginRequest;
-import com.backend.springjwt.payload.request.SignupRequest;
-import com.backend.springjwt.payload.response.JwtResponse;
-import com.backend.springjwt.payload.response.MessageResponse;
-import com.backend.springjwt.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.*;
+//import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
+//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.context.*;
+import org.springframework.security.crypto.password.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.backend.springjwt.repository.UserRepository;
-import com.backend.springjwt.security.jwt.JwtUtils;
-import com.backend.springjwt.security.services.UserDetailsImpl;
+import com.backend.springjwt.models.*;
+import com.backend.springjwt.payload.request.*;
+import com.backend.springjwt.payload.response.*;
+import com.backend.springjwt.repository.*;
+import com.backend.springjwt.security.jwt.*;
+import com.backend.springjwt.security.services.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

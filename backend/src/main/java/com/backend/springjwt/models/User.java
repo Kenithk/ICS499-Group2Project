@@ -5,6 +5,8 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.*;
+
 @Entity
 @Table(name = "users",
     uniqueConstraints = {
@@ -27,6 +29,7 @@ public class User {
   private String email;
 
   @NotBlank
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Size(max = 120)
   private String password;
 

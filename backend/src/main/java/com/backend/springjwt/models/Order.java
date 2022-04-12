@@ -19,15 +19,16 @@ public class Order {
     private boolean completed;
 
     @Column(name = "userid")
-    private Long userId;
+    private String userId;
 
     public Order() {
     }
 
-    public Order(String title, String description, boolean completed) {
+    public Order(String title, String description, boolean completed, String userId) {
         this.title = title;
         this.description = description;
         this.completed = completed;
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -58,16 +59,16 @@ public class Order {
         this.completed = isCompleted;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
     @Override
     public String toString() {
-        return "Order [ID=" + id + ", title=" + title + ", description=" + description + ", completed=" + completed + "]";
+        return "Order [ID=" + id + ", title=" + title + ", description=" + description + ", completed=" + completed + ", belonging to user UD= " + userId + "]";
     }
 }
