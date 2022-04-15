@@ -18,6 +18,9 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     //Working
     @GetMapping("/users/getAll")
     @PreAuthorize("hasRole('ADMIN')")
@@ -103,6 +106,57 @@ public class UserController {
             User _user = userData.get();
             _user.setUsername(user.getUsername());
             _user.setEmail(user.getEmail());
+            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Working
+    @PutMapping("/users/setuser/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> setUser(@PathVariable("id") Long id, @RequestBody User user) {
+        Optional<User> userData = userRepository.findById(id);
+        Optional<Role> userRole = roleRepository.findByName(ERole.ROLE_USER);
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole.get());
+        if (userData.isPresent()) {
+            User _user = userData.get();
+            _user.setRoles(roles);
+            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Working
+    @PutMapping("/users/setmod/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> setMod(@PathVariable("id") Long id, @RequestBody User user) {
+        Optional<User> userData = userRepository.findById(id);
+        Optional<Role> modRole = roleRepository.findByName(ERole.ROLE_MODERATOR);
+        Set<Role> roles = new HashSet<>();
+        roles.add(modRole.get());
+        if (userData.isPresent()) {
+            User _user = userData.get();
+            _user.setRoles(roles);
+            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Working
+    @PutMapping("/users/setadmin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> setAdmin(@PathVariable("id") Long id, @RequestBody User user) {
+        Optional<User> userData = userRepository.findById(id);
+        Optional<Role> adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
+        Set<Role> roles = new HashSet<>();
+        roles.add(adminRole.get());
+        if (userData.isPresent()) {
+            User _user = userData.get();
+            _user.setRoles(roles);
             return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

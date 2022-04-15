@@ -36,4 +36,16 @@ public class Role {
   public void setName(ERole name) {
     this.name = name;
   }
+
+  public ERole getUserRole() {
+      return ERole.ROLE_USER;
+  }
+
+  public ERole getModRole() {
+      return ERole.ROLE_MODERATOR;
+  }
+
+  public ERole getAdminRole() {
+      return ERole.ROLE_ADMIN;
+  }
 }

@@ -1,13 +1,13 @@
 package com.backend.springjwt.repository;
 
-import java.util.Optional;
+import java.util.*;
 
-import com.backend.springjwt.models.ERole;
-import com.backend.springjwt.models.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.*;
+
+import com.backend.springjwt.models.*;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
   Optional<Role> findByName(ERole name);
 }

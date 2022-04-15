@@ -15,11 +15,14 @@ import com.backend.springjwt.repository.*;
 @RestController
 @RequestMapping("/api")
 public class OrderController {
+
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("/orders/getAll")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Order>> getAllOrders(@RequestParam(required = false) String title) {
         try {
             List<Order> orders = new ArrayList<>();
@@ -37,7 +40,7 @@ public class OrderController {
         }
 
     @GetMapping("/orders/get/id/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Order>> getOrderById(@PathVariable("id") Long id) {
         try {
             Optional<Order> order = orderRepository.findById(id);
@@ -55,7 +58,7 @@ public class OrderController {
 
     //Added by Nicolas - working fine
     @GetMapping("/orders/get/userid/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or hasRole('USER')")
     public ResponseEntity<List<Order>> getOrderByUserId(@PathVariable("id") String id) {
         try {
             List<Order> orders = orderRepository.findByUserId(id);
@@ -70,7 +73,7 @@ public class OrderController {
 
     //Added by Nicolas - working fine
     @GetMapping("/orders/get/title/{title}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Order>> getOrderByTitle(@PathVariable("title") String title) {
         try {
             List<Order> orders = orderRepository.findByTitleContaining(title);
@@ -84,7 +87,7 @@ public class OrderController {
         }
 
     @GetMapping("/orders/get/completed")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Order>> getByCompleted() {
         try {
             List<Order> orders = orderRepository.findByCompleted(true);
@@ -98,7 +101,7 @@ public class OrderController {
         }
 
     @PostMapping("/orders/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
         try {
             Order _order = orderRepository
@@ -109,8 +112,21 @@ public class OrderController {
             }
         }
 
+    @PutMapping("/orders/updatenotif/userid/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<User> updateNotifications(@PathVariable("id") String id) {
+        Optional<User> user = userRepository.findById(Long.valueOf(id));
+        if (user.isPresent()) {
+            User _user = user.get();
+            _user.increaseNotifications();
+            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+        }
+
     @PutMapping("/orders/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @RequestBody Order order) {
         Optional<Order> orderData = orderRepository.findById(id);
         if (orderData.isPresent()) {
@@ -126,7 +142,7 @@ public class OrderController {
         }
 
     @DeleteMapping("/orders/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<HttpStatus> deleteOrder(@PathVariable("id") Long id) {
         try {
             orderRepository.deleteById(id);
@@ -137,7 +153,7 @@ public class OrderController {
         }
 
     @DeleteMapping("/orders/deleteAll")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<HttpStatus> deleteAllOrders() {
         try {
             orderRepository.deleteAll();

@@ -34,10 +34,12 @@ public class User {
   private String password;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(  name = "user_roles",
+  @JoinTable(name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  private Integer notifications = 0;
 
   public User() {
   }
@@ -86,5 +88,17 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public Integer getNotifications() {
+      return this.notifications;
+  }
+
+  public void increaseNotifications() {
+      notifications++;
+    }
+
+  public void setZeroNotifications() {
+      notifications = 0;
   }
 }
