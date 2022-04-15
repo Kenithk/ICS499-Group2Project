@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
 import OrderDataService from "../services/order.service";
+import PScription from "c:/Users/Nicolas/Desktop/Nicolas/College/ICS 499/NewProject/ICS499-Group2Project/frontend/src/components/images/logo192.png";
 export default class CreateOrder extends Component {
   constructor(props) {
     super(props);
@@ -10,6 +11,7 @@ export default class CreateOrder extends Component {
     this.onChangeUserId = this.onChangeUserId.bind(this);
     this.saveOrder = this.saveOrder.bind(this);
     this.newOrder = this.newOrder.bind(this);
+    this.updateNotifications = this.updateNotifications.bind(this);
     this.state = {
       content: "",
       id: null,
@@ -97,23 +99,55 @@ export default class CreateOrder extends Component {
       submitted: false
     });
   }
+
+  updateNotifications() {
+    OrderDataService.updateNotifications(this.state.userId)
+      .then(response => {
+        console.log(response.data);
+        this.setState({
+          message: "The user was notified successfully!"
+        });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
   
   render() {
     const { content } = this.state;
     if (content === "Create Order") {
       return (
-        <div className="submit-form">
+        <div className="form-group">
+        <header className="jumbotron">
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+        <h1><strong>PScription</strong></h1>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+        <h2>A place for all your medical needs</h2>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+          <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+        </div>            
+        </header>
           {this.state.submitted ? (
-            <div>
+            <div className="col-md-4" style={{padding: 0, left: 400, top: 10}}>
               <h4>You submitted successfully!</h4>
+              <div className="col-md-4" style={{padding: 0, left: 35, top: 15}}>
               <button className="btn btn-success" onClick={this.newOrder}>
                 Create new
               </button>
+              </div>
+              <div className="col-md-4" style={{padding: 0, left: 160, top: -23}}>
+              <button className="btn btn-success" onClick={this.updateNotifications}>
+                Notify User
+              </button>
+              </div>
+              <p>{this.state.message}</p>
             </div>
           ) : (
             <div>
-              <div className="form-group">
-                <h4>Create new Order</h4>
+              <div className="col-md-4" style={{padding: 0, left: 400, top: 10}}>
+                <h2>Create new Order</h2>
                 <label htmlFor="title">Title</label>
                 <input
                   type="text"
@@ -125,7 +159,7 @@ export default class CreateOrder extends Component {
                   name="title"
                 />
               </div>
-              <div className="form-group">
+              <div className="col-md-4" style={{padding: 0, left: 400, top: 15}}>
                 <label htmlFor="description">Description</label>
                 <input
                   type="text"
@@ -137,7 +171,7 @@ export default class CreateOrder extends Component {
                   name="description"
                 />
               </div>
-              <div className="form-group">
+              <div className="col-md-4" style={{padding: 0, left: 400, top: 20}}>
                 <label htmlFor="userId">User ID</label>
                 <input
                   type="text"
@@ -149,9 +183,11 @@ export default class CreateOrder extends Component {
                   name="userId"
               />
               </div>
+              <div className="col-md-8" style={{padding: 0, left: 550, top: 35}}>
               <button onClick={this.saveOrder} className="btn btn-success">
                 Submit
               </button>
+              </div>
             </div>
           )}
         </div>
@@ -160,7 +196,18 @@ export default class CreateOrder extends Component {
       return (
         <div className="container">
         <header className="jumbotron">
-          <h3><strong>{this.state.content}</strong></h3>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+        <h1><strong>PScription</strong></h1>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+        <h2>A place for all your medical needs</h2>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 120}}>
+        <h3><strong>{this.state.content}</strong></h3>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+          <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+        </div>            
         </header>
       </div>
       )

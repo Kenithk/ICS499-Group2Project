@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
 import UserDataService from "../services/user.service";
+import PScription from "c:/Users/Nicolas/Desktop/Nicolas/College/ICS 499/NewProject/ICS499-Group2Project/frontend/src/components/images/logo192.png";
 
 export default class ManageUsers extends Component {
   constructor(props) {
@@ -15,6 +16,9 @@ export default class ManageUsers extends Component {
     this.refreshList = this.refreshList.bind(this);
     this.setActiveUser = this.setActiveUser.bind(this);
     this.updateUser = this.updateUser.bind(this);
+    this.setUser = this.setUser.bind(this);
+    this.setMod = this.setMod.bind(this);
+    this.setAdmin = this.setAdmin.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
     this.searchId = this.searchId.bind(this);
     this.searchUsername = this.searchUsername.bind(this);
@@ -180,6 +184,54 @@ export default class ManageUsers extends Component {
       });
   }
 
+  setUser() {
+    UserDataService.setUser(
+      this.state.currentUser.id,
+      this.state.currentUser
+    )
+    .then(response => {
+      console.log(response.data);
+      this.setState({
+        message: "User role assigned successfully!"
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+
+  setMod() {
+    UserDataService.setMod(
+      this.state.currentUser.id,
+      this.state.currentUser
+    )
+    .then(response => {
+      console.log(response.data);
+      this.setState({
+        message: "Mod role assigned successfully!"
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+
+  setAdmin() {
+    UserDataService.setAdmin(
+      this.state.currentUser.id,
+      this.state.currentUser
+    )
+    .then(response => {
+      console.log(response.data);
+      this.setState({
+        message: "Admin role assigned successfully!"
+      });
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+
   deleteUser() {    
     UserDataService.delete(this.state.currentUser.id)
       .then(response => {
@@ -197,8 +249,22 @@ export default class ManageUsers extends Component {
     const { searchId, searchUsername, searchEmail, users, currentUser, currentIndex, content} = this.state;
     if (content === "Manage Users") {
       return (
-        <div className="list row">
-           <div className="col-md-8" style={{padding: 0, left: 0, top: 10}}>
+        <div className="container">
+          <header className="jumbotron">
+            <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+              <h1><strong>PScription</strong></h1>
+              </div>
+              <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+                <h2>A place for all your medical needs</h2>
+                </div>
+                <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+                  <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+                  </div>            
+            </header>
+            <div className="col-md-6">
+          <h2>Manage Users</h2>
+          </div>
+           <div className="col-md-5">
             <h4>Search Users By ID</h4>
             <div className="input-group mb-3">
               <input
@@ -219,7 +285,7 @@ export default class ManageUsers extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-8" style={{padding: 0, left: 0, top: 15}}>
+          <div className="col-md-5">
             <h4>Search Users By Username</h4>
             <div className="input-group mb-3">
               <input
@@ -240,7 +306,7 @@ export default class ManageUsers extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-8" style={{padding: 0, left: 0, top: 20}}>
+          <div className="col-md-5">
             <h4>Search Users By Email</h4>
             <div className="input-group mb-3">
               <input
@@ -261,7 +327,7 @@ export default class ManageUsers extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-6" style={{padding: 0, left: 550, top: -265}}>
+          <div className="col-md-4">
             <h4>Users List</h4>
             <ul className="list-group">
               {users &&
@@ -279,9 +345,10 @@ export default class ManageUsers extends Component {
                 ))}
             </ul>
           </div>
-          <div className="col-md-6" style={{padding: 0, left: -375, top: 50}}>
+          <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>
+            <div className="col-md-2">
             {currentUser ? (
-              <div>
+              <div> 
                 <h4>User #{currentUser.id}</h4>
                 <div>
                   <label>
@@ -302,7 +369,7 @@ export default class ManageUsers extends Component {
               </div>
             )}
           </div>
-          <div className="col-md-6" style={{padding: 0, left: 170, top: -185}}>
+          <div className="col-md-2" style={{padding: 0, left: 300, top: -160}}>
             {currentUser ? (
             <div>
               <h4>Edit this User</h4>
@@ -329,17 +396,34 @@ export default class ManageUsers extends Component {
                 </div>
               </form>
               <button
-                className="badge badge-danger mr-2"
-                onClick={this.deleteUser}
+                className="badge badge-secondary mr-2"
+                onClick={this.setUser}
               >
-                Delete
+                User
               </button>
               <button
-                type="submit"
+                className="badge badge-primary mr-2"
+                onClick={this.setMod}
+              >
+                Mod
+              </button>
+              <button
+                className="badge badge-warning mr-2"
+                onClick={this.setAdmin}
+              >
+                Admin
+              </button>
+              <button
                 className="badge badge-success"
                 onClick={this.updateUser}
               >
                 Update
+              </button>
+              <button
+              className="badge badge-danger mr-2"
+              onClick={this.deleteUser}
+              >
+                Delete
               </button>
               <p>{this.state.message}</p>
             </div>
@@ -347,6 +431,7 @@ export default class ManageUsers extends Component {
             <div>
             </div>
           )}
+          </div>
         </div>
         </div>
       )
@@ -354,7 +439,18 @@ export default class ManageUsers extends Component {
     return (
       <div className="container">
         <header className="jumbotron">
-          <h3><strong>{this.state.content}</strong></h3>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+        <h1><strong>PScription</strong></h1>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+        <h2>A place for all your medical needs</h2>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 120}}>
+        <h3><strong>{this.state.content}</strong></h3>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+          <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+        </div>            
         </header>
       </div>
     )

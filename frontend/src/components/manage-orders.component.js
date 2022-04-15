@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
 import OrderDataService from "../services/order.service";
+import PScription from "c:/Users/Nicolas/Desktop/Nicolas/College/ICS 499/NewProject/ICS499-Group2Project/frontend/src/components/images/logo192.png";
 
 export default class ManageOrders extends Component {
   constructor(props) {
@@ -243,11 +244,25 @@ export default class ManageOrders extends Component {
     const { searchId, searchTitle, searchUserId, orders, currentOrder, currentIndex, content } = this.state;
     if (content === "Manage Orders") {
       return (
-        <div className="list row">
-          <div className="col-md-8" style={{padding: 0, left: 0, top: 10}}>
-            <h4>Search Orders By ID</h4>
-            <div className="input-group mb-3">
-              <input
+        <div className="container">
+          <header className="jumbotron">
+            <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+              <h1><strong>PScription</strong></h1>
+              </div>
+              <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+                <h2>A place for all your medical needs</h2>
+                </div>
+                <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+                  <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+                  </div>            
+            </header>
+          <div className="col-md-6">
+          <h2>Manage Orders</h2>
+          </div>
+            <div className="col-md-5">
+              <h4>Search Orders By ID</h4>
+              <div className="input-group mb-3">
+                <input
                 type="text"
                 className="form-control"
                 placeholder="Search by ID"
@@ -265,7 +280,7 @@ export default class ManageOrders extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-8" style={{padding: 0, left: 0, top: 15}}>
+          <div className="col-md-5" >
             <h4>Search Orders By Title</h4>
             <div className="input-group mb-3">
               <input
@@ -286,7 +301,7 @@ export default class ManageOrders extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-8" style={{padding: 0, left: 0, top: 20}}>
+          <div className="col-md-5" >
             <h4>Search Orders By User ID</h4>
             <div className="input-group mb-3">
               <input
@@ -307,7 +322,7 @@ export default class ManageOrders extends Component {
               </div>
             </div>
           </div>
-          <div className="col-md-6" style={{padding: 0, left: 550, top: -265}}>
+          <div className="col-md-4">
             <h4>Orders List</h4>
             <ul className="list-group">
               {orders &&
@@ -323,17 +338,18 @@ export default class ManageOrders extends Component {
                     {order.title}
                   </li>
                 ))}
-            </ul>
-            <button
-              className="m-3 btn btn-sm btn-danger"
-              onClick={this.removeAllOrders}
-            >
-              Remove All
-            </button>
-          </div>
-          <div className="col-md-6" style={{padding: 0, left: -375, top: 50}}>
-            {currentOrder ? (
-              <div>
+                </ul>
+                <button
+                className="m-3 btn btn-sm btn-danger"
+                onClick={this.removeAllOrders}
+                >
+                  Remove All
+                  </button>
+                  </div>
+            <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>
+            <div className="col-md-3" >
+              {currentOrder ? (
+               <div>
                 <h4>Order #{currentOrder.id}</h4>
                 <div>
                   <label>
@@ -365,8 +381,8 @@ export default class ManageOrders extends Component {
                 <br />
               </div>
             )}
-          </div>
-          <div className="col-md-6" style={{padding: 0, left: 170, top: -394}}>
+            </div>
+            <div className="col-md-2" style={{position: "absolute", left: 200, top: 0}}>
             {currentOrder ? (
             <div>
               <h4>Edit this Order</h4>
@@ -442,17 +458,28 @@ export default class ManageOrders extends Component {
             <div>
             </div>
           )}
-        </div>
-        </div>     
+          </div>
+          </div>
+        </div>    
       );
-    } else {
-      return (
+    } 
+    return (
         <div className="container">
         <header className="jumbotron">
-          <h3><strong>{this.state.content}</strong></h3>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+        <h1><strong>PScription</strong></h1>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+        <h2>A place for all your medical needs</h2>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 120}}>
+        <h3><strong>{this.state.content}</strong></h3>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+          <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+        </div>            
         </header>
       </div>
-      )
-    }    
+      )       
   }
 }

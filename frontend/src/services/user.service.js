@@ -17,6 +17,15 @@ class UserDataService {
   update(id, data) {
     return http.put(`/users/update/${id}`, data, { headers: authHeader() });
   }
+  setUser(id, data) {
+    return http.put(`/users/setuser/${id}`, data, { headers: authHeader() });
+  }
+  setMod(id, data) {
+    return http.put(`/users/setmod/${id}`, data, { headers: authHeader() });
+  }
+  setAdmin(id, data) {
+    return http.put(`/users/setadmin/${id}`, data, { headers: authHeader() });
+  }
   delete(id) {
     return http.delete(`/users/delete/${id}`, { headers: authHeader() });
   }
