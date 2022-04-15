@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PScription from "c:/Users/Nicolas/Desktop/Nicolas/College/ICS 499/NewProject/ICS499-Group2Project/frontend/src/components/images/logo192.png";
+import PScription from "../components/images/logo192.png";
 import UserService from "../services/contents.service";
 
 export default class Home extends Component {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
 import OrderDataService from "../services/order.service";
-import PScription from "c:/Users/Nicolas/Desktop/Nicolas/College/ICS 499/NewProject/ICS499-Group2Project/frontend/src/components/images/logo192.png";
+import PScription from "../components/images/logo192.png";
 export default class CreateOrder extends Component {
   constructor(props) {
     super(props);
