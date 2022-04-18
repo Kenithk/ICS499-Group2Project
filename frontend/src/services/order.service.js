@@ -20,9 +20,6 @@ class OrderDataService {
   create(data) {
     return http.post(`/orders/create`, data, { headers: authHeader() });
   }
-  updateNotifications(id) {
-    return http.post(`/orders/updatenotif/userid/${id}`, { headers: authHeader() });
-  }
   update(id, data) {
     return http.put(`/orders/update/${id}`, data, { headers: authHeader() });
   }
@@ -31,9 +28,6 @@ class OrderDataService {
   }
   deleteAll() {
     return http.delete(`/orders/deleteAll`, { headers: authHeader() });
-  }
-  getUserId() {
-    
   }
  
 }

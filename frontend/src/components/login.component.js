@@ -3,6 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../services/auth.service";
+import PScription from "../components/images/logo192.png";
 
 const required = value => {
   if (!value) {
@@ -54,7 +55,7 @@ export default class Login extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       AuthService.login(this.state.username, this.state.password).then(
         () => {
-          this.props.history.push("/profile");
+          this.props.history.push("/home");
           window.location.reload();
         },
         error => {
@@ -80,7 +81,21 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className="col-md-12">
+      <div className="container">
+        <header className="jumbotron">
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
+        <h1><strong>PScription</strong></h1>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 100}}>
+        <h2>A place for all your medical needs</h2>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 250, top: 120}}>
+        <h3><strong>{this.state.content}</strong></h3>
+        </div>
+        <div className="col-md-8" style={{padding: 0, left: 25, top: -75}}>
+          <img src={PScription} height={192} width={192} alt= "PScription logo"/> 
+        </div>            
+        </header>
         <div className="card card-container">
           <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"

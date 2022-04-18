@@ -3,6 +3,7 @@ import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
 import OrderDataService from "../services/order.service";
 import PScription from "../components/images/logo192.png";
+
 export default class CreateOrder extends Component {
   constructor(props) {
     super(props);
@@ -11,7 +12,6 @@ export default class CreateOrder extends Component {
     this.onChangeUserId = this.onChangeUserId.bind(this);
     this.saveOrder = this.saveOrder.bind(this);
     this.newOrder = this.newOrder.bind(this);
-    this.updateNotifications = this.updateNotifications.bind(this);
     this.state = {
       content: "",
       id: null,
@@ -99,19 +99,6 @@ export default class CreateOrder extends Component {
       submitted: false
     });
   }
-
-  updateNotifications() {
-    OrderDataService.updateNotifications(this.state.userId)
-      .then(response => {
-        console.log(response.data);
-        this.setState({
-          message: "The user was notified successfully!"
-        });
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
   
   render() {
     const { content } = this.state;
@@ -131,23 +118,17 @@ export default class CreateOrder extends Component {
         </header>
           {this.state.submitted ? (
             <div className="col-md-4" style={{padding: 0, left: 400, top: 10}}>
-              <h4>You submitted successfully!</h4>
-              <div className="col-md-4" style={{padding: 0, left: 35, top: 15}}>
+              <h4><strong>You submitted successfully!</strong></h4>
+              <div className="col-md-4" style={{padding: 0, left: 100, top: 15}}>
               <button className="btn btn-success" onClick={this.newOrder}>
                 Create new
               </button>
               </div>
-              <div className="col-md-4" style={{padding: 0, left: 160, top: -23}}>
-              <button className="btn btn-success" onClick={this.updateNotifications}>
-                Notify User
-              </button>
-              </div>
-              <p>{this.state.message}</p>
             </div>
           ) : (
             <div>
               <div className="col-md-4" style={{padding: 0, left: 400, top: 10}}>
-                <h2>Create new Order</h2>
+                <h2><strong>Create new Order</strong></h2>
                 <label htmlFor="title">Title</label>
                 <input
                   type="text"

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
+import UserDataService from "../services/user.service";
 import OrderDataService from "../services/order.service";
 import PScription from "../components/images/logo192.png";
 
@@ -11,6 +12,7 @@ export default class PersonalOrders extends Component {
     this.onChangeUserId = this.onChangeUserId.bind(this);
     this.setActiveOrder = this.setActiveOrder.bind(this);
     this.searchUserId = this.searchUserId.bind(this);
+    this.clearNotifications = this.clearNotifications.bind(this);
     this.state = {
       content: "",
       orders: [],
@@ -83,6 +85,19 @@ export default class PersonalOrders extends Component {
       });
   }
 
+  clearNotifications() {
+    UserDataService.clearNotifications(this.state.searchUserId)
+      .then(response => {
+        console.log(response.data);
+        this.setState({
+          message: "All notifications mark as read!"
+        });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
   render() {
     const { searchUserId, orders, currentOrder, currentIndex, content } = this.state;
     if (content === "Personal Orders") {
@@ -100,7 +115,7 @@ export default class PersonalOrders extends Component {
                   </div>            
             </header>
             <div className="col-md-6">
-          <h2>My past and present Orders</h2>
+          <h2><strong>My past and present Orders</strong></h2>
           </div>
           <div className="col-md-5">
             <h4>Confirm your User ID</h4>
@@ -140,6 +155,13 @@ export default class PersonalOrders extends Component {
                   </li>
                 ))}
             </ul>
+            <button
+                className="m-4 btn btn-sm btn-success"
+                onClick={this.clearNotifications}
+                >
+                  Mark All As Read
+                  </button>
+                  <p>{this.state.message}</p>
           </div>
           <div className="col-md-5" style={{position: "absolute", left: 1250, top: 572}}>
             {currentOrder ? (

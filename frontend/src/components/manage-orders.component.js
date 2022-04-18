@@ -257,7 +257,7 @@ export default class ManageOrders extends Component {
                   </div>            
             </header>
           <div className="col-md-6">
-          <h2>Manage Orders</h2>
+          <h2><strong>Manage Orders</strong></h2>
           </div>
             <div className="col-md-5">
               <h4>Search Orders By ID</h4>
@@ -344,6 +344,12 @@ export default class ManageOrders extends Component {
                 onClick={this.removeAllOrders}
                 >
                   Remove All
+                  </button>
+                <button
+                className="m-3 btn btn-sm btn-primary"
+                onClick={this.refreshList}
+                >
+                  Refresh
                   </button>
                   </div>
             <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>

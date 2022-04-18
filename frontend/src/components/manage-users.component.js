@@ -262,7 +262,7 @@ export default class ManageUsers extends Component {
                   </div>            
             </header>
             <div className="col-md-6">
-          <h2>Manage Users</h2>
+          <h2><strong>Manage Users</strong></h2>
           </div>
            <div className="col-md-5">
             <h4>Search Users By ID</h4>
@@ -344,6 +344,12 @@ export default class ManageUsers extends Component {
                   </li>
                 ))}
             </ul>
+            <button
+                className="m-3 btn btn-sm btn-primary"
+                onClick={this.refreshList}
+                >
+                  Refresh
+                  </button>
           </div>
           <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>
             <div className="col-md-2">

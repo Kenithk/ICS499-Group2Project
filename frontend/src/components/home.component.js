@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PScription from "../components/images/logo192.png";
 import UserService from "../services/contents.service";
+import PScription from "../components/images/logo192.png";
 
 export default class Home extends Component {
   constructor(props) {

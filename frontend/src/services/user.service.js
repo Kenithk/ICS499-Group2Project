@@ -14,8 +14,14 @@ class UserDataService {
   getByEmail(email) {
     return http.get(`/users/get/email/${email}`, { headers: authHeader() });
   }
+  refreshUser(id) {
+    return http.get(`/users/refresh/${id}`, { headers: authHeader() });
+  }
   update(id, data) {
     return http.put(`/users/update/${id}`, data, { headers: authHeader() });
+  }
+  clearNotifications(id) {
+    return http.put(`/users/clearnotifications/${id}`, { headers: authHeader() });
   }
   setUser(id, data) {
     return http.put(`/users/setuser/${id}`, data, { headers: authHeader() });
