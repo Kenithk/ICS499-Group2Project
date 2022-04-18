@@ -56,7 +56,8 @@ public class AuthController {
             userDetails.getId(),
             userDetails.getUsername(),
             userDetails.getEmail(),
-            roles));
+            roles,
+            userDetails.getNotifications()));
   }
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

@@ -106,23 +106,16 @@ public class OrderController {
         try {
             Order _order = orderRepository
                     .save(new Order(order.getTitle(), order.getDescription(), false, order.getUserId()));
+            Optional<User> user  = userRepository.findById(Long.valueOf(order.getUserId()));
+            if (user.isPresent()) {
+                User _user = user.get();
+                _user.increaseNotifications();
+                userRepository.save(_user);
+            }
             return new ResponseEntity<>(_order, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-
-    @PutMapping("/orders/updatenotif/userid/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<User> updateNotifications(@PathVariable("id") String id) {
-        Optional<User> user = userRepository.findById(Long.valueOf(id));
-        if (user.isPresent()) {
-            User _user = user.get();
-            _user.increaseNotifications();
-            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
         }
 
     @PutMapping("/orders/update/{id}")

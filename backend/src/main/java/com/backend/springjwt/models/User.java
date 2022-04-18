@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.*;
     })
 public class User {
   @Id
+  @NotNull
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usid_generator")
   @SequenceGenerator(name = "usid_generator", initialValue = 1000, allocationSize = 1, sequenceName = "usid_seq")
   private Long id;
@@ -39,7 +40,8 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-  private Integer notifications = 0;
+  @Column(name = "notifications")
+  private Integer notifications;
 
   public User() {
   }
@@ -48,6 +50,7 @@ public class User {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.notifications = 0;
   }
 
   public Long getId() {

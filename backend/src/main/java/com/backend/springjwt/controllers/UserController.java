@@ -98,6 +98,22 @@ public class UserController {
         }
 
     //Working
+    @GetMapping("/users/refresh/{id}")
+    public ResponseEntity<User> refreshUser(@PathVariable("id") Long id) {
+        try {
+            Optional<User> _user = userRepository.findById(id);
+            if (_user.isPresent()) {
+                User freshUser = _user.get();
+                return new ResponseEntity<>(freshUser, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+    }
+
+    //Working
     @PutMapping("/users/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
@@ -106,6 +122,19 @@ public class UserController {
             User _user = userData.get();
             _user.setUsername(user.getUsername());
             _user.setEmail(user.getEmail());
+            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Working
+    @PutMapping("/users/clearnotifications/{id}")
+    public ResponseEntity<User> clearNotifications(@PathVariable("id") String id) {
+        Optional<User> userData = userRepository.findById(Long.valueOf(id));
+        if (userData.isPresent()) {
+            User _user = userData.get();
+            _user.setZeroNotifications();
             return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
