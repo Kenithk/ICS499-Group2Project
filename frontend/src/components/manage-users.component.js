@@ -7,9 +7,7 @@ import PScription from "../components/images/logo192.png";
 export default class ManageUsers extends Component {
   constructor(props) {
     super(props);
-    this.onChangeSearchId = this.onChangeSearchId.bind(this);
-    this.onChangeSearchUsername = this.onChangeSearchUsername.bind(this);
-    this.onChangeSearchEmail = this.onChangeSearchEmail.bind(this);
+    this.onChangeSearchCriteria = this.onChangeSearchCriteria.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.retrieveUsers = this.retrieveUsers.bind(this);
@@ -20,18 +18,13 @@ export default class ManageUsers extends Component {
     this.setMod = this.setMod.bind(this);
     this.setAdmin = this.setAdmin.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
-    this.searchId = this.searchId.bind(this);
-    this.searchUsername = this.searchUsername.bind(this);
-    this.searchEmail = this.searchEmail.bind(this);
+    this.searchCriteria = this.searchCriteria.bind(this);
     this.state = {
       content: "",
       users: [],
       currentUser: null,
       currentIndex: -1,
-      searchUne: "",
-      searchId: "",
-      searchUsername: "",
-      searchEmail: ""
+      searchCriteria: ""
     };
   }
 
@@ -39,7 +32,7 @@ export default class ManageUsers extends Component {
     ContentsService.getManageUsers().then(
       response => {
         this.setState({
-          content: response.data
+          content: response.data,
         });
       },
       error => {
@@ -60,24 +53,10 @@ export default class ManageUsers extends Component {
     );
   }
 
-  onChangeSearchId(e) {
-    const searchId = e.target.value;
+  onChangeSearchCriteria(e) {
+    const searchCriteria = e.target.value;
     this.setState({
-      searchId: searchId
-    });
-  }
-
-  onChangeSearchUsername(e) {
-    const searchUsername = e.target.value;
-    this.setState({
-      searchUsername: searchUsername
-    });
-  }
-
-  onChangeSearchEmail(e) {
-    const searchEmail = e.target.value;
-    this.setState({
-      searchEmail: searchEmail
+      searchCriteria: searchCriteria
     });
   }
 
@@ -129,43 +108,17 @@ export default class ManageUsers extends Component {
     });
   }
 
-  searchId() {
-    UserDataService.getById(this.state.searchId)
-    .then(response => {
-      this.setState({
-        users: response.data
+  searchCriteria() {
+    UserDataService.getByCriteria(this.state.searchCriteria)
+      .then(response => {
+        this.setState({
+          users: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
       });
-      console.log(response.data);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  }
-
-  searchUsername() {
-    UserDataService.getByUsername(this.state.searchUsername)
-    .then(response => {
-      this.setState({
-        users: response.data
-      });
-      console.log(response.data);
-    })
-    .catch(e => {
-      console.log(e);
-    });
-  }
-
-  searchEmail() {
-    UserDataService.getByEmail(this.state.searchEmail)
-    .then(response => {
-      this.setState({
-        users: response.data
-      });
-      console.log(response.data);
-    })
-    .catch(e => {
-      console.log(e);
-    });
   }
 
   updateUser() {
@@ -246,10 +199,11 @@ export default class ManageUsers extends Component {
   } 
 
   render() {
-    const { searchId, searchUsername, searchEmail, users, currentUser, currentIndex, content} = this.state;
+    const { searchCriteria, users, currentUser, currentIndex, content} = this.state;
+    const windowWidth = document.documentElement.clientWidth;
     if (content === "Manage Users") {
       return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
           <header className="jumbotron">
             <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
               <h1><strong>PScription</strong></h1>
@@ -262,65 +216,23 @@ export default class ManageUsers extends Component {
                   </div>            
             </header>
             <div className="col-md-6">
-          <h2><strong>Manage Users</strong></h2>
-          </div>
-           <div className="col-md-5">
-            <h4>Search Users By ID</h4>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by User ID"
-                value={searchId}
-                onChange={this.onChangeSearchId}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  onClick={this.searchId}
-                >
-                  Search
-                </button>
+              <h2><strong>Manage Users</strong></h2>
               </div>
-            </div>
-          </div>
-          <div className="col-md-5">
-            <h4>Search Users By Username</h4>
-            <div className="input-group mb-3">
-              <input
+              <div className="col-md-5">
+              <h4>Search Users</h4>
+              <div className="input-group mb-3">
+                <input
                 type="text"
                 className="form-control"
-                placeholder="Search by Username"
-                value={searchUsername}
-                onChange={this.onChangeSearchUsername}
+                placeholder="Search by ID, Username, Email"
+                value={searchCriteria}
+                onChange={this.onChangeSearchCriteria}
               />
               <div className="input-group-append">
                 <button
                   className="btn btn-outline-secondary"
                   type="button"
-                  onClick={this.searchUsername}
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-5">
-            <h4>Search Users By Email</h4>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by Email"
-                value={searchEmail}
-                onChange={this.onChangeSearchEmail}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  onClick={this.searchEmail}
+                  onClick={this.searchCriteria}
                 >
                   Search
                 </button>
@@ -351,7 +263,7 @@ export default class ManageUsers extends Component {
                   Refresh
                   </button>
           </div>
-          <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>
+          <div className= "col-md-8" style={{position: "absolute", left: windowWidth/2.05, top: 572}}>
             <div className="col-md-2">
             {currentUser ? (
               <div> 
@@ -426,8 +338,8 @@ export default class ManageUsers extends Component {
                 Update
               </button>
               <button
-              className="badge badge-danger mr-2"
-              onClick={this.deleteUser}
+                className="badge badge-danger mr-2"
+                onClick={this.deleteUser}
               >
                 Delete
               </button>
@@ -443,7 +355,7 @@ export default class ManageUsers extends Component {
       )
     }
     return (
-      <div className="container">
+      <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>PScription</strong></h1>

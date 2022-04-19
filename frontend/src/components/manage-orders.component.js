@@ -7,9 +7,7 @@ import PScription from "../components/images/logo192.png";
 export default class ManageOrders extends Component {
   constructor(props) {
     super(props);
-    this.onChangeSearchId = this.onChangeSearchId.bind(this);
-    this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.onChangeSearchUserId = this.onChangeSearchUserId.bind(this);
+    this.onChangeSearchCriteria = this.onChangeSearchCriteria.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.onChangeUserId = this.onChangeUserId.bind(this);
@@ -20,17 +18,13 @@ export default class ManageOrders extends Component {
     this.updateCompleted = this.updateCompleted.bind(this);
     this.updateOrder = this.updateOrder.bind(this);
     this.deleteOrder = this.deleteOrder.bind(this);
-    this.searchId = this.searchId.bind(this);
-    this.searchTitle = this.searchTitle.bind(this);
-    this.searchUserId = this.searchUserId.bind(this);
+    this.searchCriteria = this.searchCriteria.bind(this);
     this.state = {
       content: "",
       orders: [],
       currentOrder: null,
       currentIndex: -1,
-      searchId: "",
-      searchTitle: "",
-      searchUserId: ""
+      searchCriteria: "",
     };
   } 
 
@@ -59,24 +53,10 @@ export default class ManageOrders extends Component {
     );
   }
 
-  onChangeSearchId(e) {
-    const searchId = e.target.value;
+  onChangeSearchCriteria(e) {
+    const searchCriteria = e.target.value;
     this.setState({
-      searchId: searchId
-    });
-  }
-
-  onChangeSearchTitle(e) {
-    const searchTitle = e.target.value;
-    this.setState({
-      searchTitle: searchTitle
-    });
-  }
-
-  onChangeSearchUserId(e) {
-    const searchUserId = e.target.value;
-    this.setState({
-      searchUserId: searchUserId
+      searchCriteria: searchCriteria
     });
   }
 
@@ -149,34 +129,8 @@ export default class ManageOrders extends Component {
       });
   }
 
-  searchId() {
-    OrderDataService.getById(this.state.searchId)
-      .then(response => {
-        this.setState({
-          orders: response.data
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  searchTitle() {
-    OrderDataService.getByTitle(this.state.searchTitle)
-      .then(response => {
-        this.setState({
-          orders: response.data
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  searchUserId() {
-    OrderDataService.getByUserId(this.state.searchUserId)
+  searchCriteria() {
+    OrderDataService.getByCriteria(this.state.searchCriteria)
       .then(response => {
         this.setState({
           orders: response.data
@@ -241,10 +195,11 @@ export default class ManageOrders extends Component {
   }
 
   render() {
-    const { searchId, searchTitle, searchUserId, orders, currentOrder, currentIndex, content } = this.state;
+    const { searchCriteria, orders, currentOrder, currentIndex, content } = this.state;
+    const windowWidth = document.documentElement.clientWidth;
     if (content === "Manage Orders") {
       return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
           <header className="jumbotron">
             <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
               <h1><strong>PScription</strong></h1>
@@ -259,63 +214,21 @@ export default class ManageOrders extends Component {
           <div className="col-md-6">
           <h2><strong>Manage Orders</strong></h2>
           </div>
-            <div className="col-md-5">
-              <h4>Search Orders By ID</h4>
+          <div className="col-md-5">
+              <h4>Search Orders</h4>
               <div className="input-group mb-3">
                 <input
                 type="text"
                 className="form-control"
-                placeholder="Search by ID"
-                value={searchId}
-                onChange={this.onChangeSearchId}
+                placeholder="Search by ID, Title, Description, Status, User ID"
+                value={searchCriteria}
+                onChange={this.onChangeSearchCriteria}
               />
               <div className="input-group-append">
                 <button
                   className="btn btn-outline-secondary"
                   type="button"
-                  onClick={this.searchId}
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-5" >
-            <h4>Search Orders By Title</h4>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by Title"
-                value={searchTitle}
-                onChange={this.onChangeSearchTitle}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  onClick={this.searchTitle}
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-5" >
-            <h4>Search Orders By User ID</h4>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by User ID"
-                value={searchUserId}
-                onChange={this.onChangeSearchUserId}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  onClick={this.searchUserId}
+                  onClick={this.searchCriteria}
                 >
                   Search
                 </button>
@@ -352,7 +265,7 @@ export default class ManageOrders extends Component {
                   Refresh
                   </button>
                   </div>
-            <div className= "col-md-8" style={{position: "absolute", left: 1200, top: 572}}>
+            <div className= "col-md-8" style={{position: "absolute", left: windowWidth/2.05, top: 572}}>
             <div className="col-md-3" >
               {currentOrder ? (
                <div>
@@ -470,7 +383,7 @@ export default class ManageOrders extends Component {
       );
     } 
     return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>PScription</strong></h1>

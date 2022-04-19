@@ -5,17 +5,8 @@ class OrderDataService {
   getAll() {
     return http.get(`/orders/getAll`, { headers: authHeader() });
   }
-  getById(id) {
-    return http.get(`/orders/get/id/${id}`, { headers: authHeader() });
-  }
-  getByUserId(id) {
-    return http.get(`/orders/get/userid/${id}`, { headers: authHeader() });
-  }
-  getByTitle(title) {
-    return http.get(`/orders/get/title/${title}`, { headers: authHeader() });
-  }
-  getByCompleted() {
-    return http.get(`/orders/get/completed/`, { headers: authHeader() });
+  getByCriteria(data) {
+    return http.get(`/orders/search/${data}`, { headers: authHeader() });
   }
   create(data) {
     return http.post(`/orders/create`, data, { headers: authHeader() });
@@ -29,6 +20,5 @@ class OrderDataService {
   deleteAll() {
     return http.delete(`/orders/deleteAll`, { headers: authHeader() });
   }
- 
 }
 export default new OrderDataService();

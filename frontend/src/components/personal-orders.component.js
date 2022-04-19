@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
+import AuthService from "../services/auth.service";
 import UserDataService from "../services/user.service";
 import OrderDataService from "../services/order.service";
 import PScription from "../components/images/logo192.png";
@@ -13,11 +14,14 @@ export default class PersonalOrders extends Component {
     this.setActiveOrder = this.setActiveOrder.bind(this);
     this.searchUserId = this.searchUserId.bind(this);
     this.clearNotifications = this.clearNotifications.bind(this);
+    this.retrieveOrders = this.retrieveOrders.bind(this);
+    this.refreshList = this.refreshList.bind(this);
     this.state = {
       content: "",
       orders: [],
       currentOrder: null,
       currentIndex: -1,
+      currentUser: { username: "" },
       searchId: "",
       searchTitle: "",
       searchUserId: ""
@@ -25,6 +29,8 @@ export default class PersonalOrders extends Component {
   } 
 
   componentDidMount() {
+    const currentUser = AuthService.getCurrentUser();
+    this.setState({ currentUser: currentUser});
     ContentsService.getPersonalOrders().then(
       response => {
         this.setState({
@@ -45,6 +51,7 @@ export default class PersonalOrders extends Component {
           EventBus.dispatch("logout");
         }
       },
+      this.retrieveOrders(currentUser)
     );
   }
 
@@ -85,8 +92,8 @@ export default class PersonalOrders extends Component {
       });
   }
 
-  clearNotifications() {
-    UserDataService.clearNotifications(this.state.searchUserId)
+  clearNotifications(currentUser) {
+    UserDataService.clearNotifications(currentUser.id)
       .then(response => {
         console.log(response.data);
         this.setState({
@@ -98,11 +105,33 @@ export default class PersonalOrders extends Component {
       });
   }
 
+  retrieveOrders(currentUser) {
+    OrderDataService.getByUserId(currentUser.id)
+      .then(response => {
+        this.setState({
+          orders: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  refreshList() {
+    this.retrieveOrders();
+    this.setState({
+      currentOrder: null,
+      currentIndex: -1
+    });
+  }
+
   render() {
-    const { searchUserId, orders, currentOrder, currentIndex, content } = this.state;
+    const { orders, currentUser, currentOrder, currentIndex, content } = this.state;
+    const windowWidth = document.documentElement.clientWidth;
     if (content === "Personal Orders") {
       return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
           <header className="jumbotron">
             <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
               <h1><strong>PScription</strong></h1>
@@ -116,27 +145,6 @@ export default class PersonalOrders extends Component {
             </header>
             <div className="col-md-6">
           <h2><strong>My past and present Orders</strong></h2>
-          </div>
-          <div className="col-md-5">
-            <h4>Confirm your User ID</h4>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type your User ID"
-                value={searchUserId}
-                onChange={this.onChangeSearchUserId}
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  type="button"
-                  onClick={this.searchUserId}
-                >
-                  Go
-                </button>
-              </div>
-            </div>
           </div>
           <div className="col-md-4">
             <h4>Orders List</h4>
@@ -157,13 +165,13 @@ export default class PersonalOrders extends Component {
             </ul>
             <button
                 className="m-4 btn btn-sm btn-success"
-                onClick={this.clearNotifications}
+                onClick={() => this.clearNotifications(currentUser)}
                 >
                   Mark All As Read
                   </button>
                   <p>{this.state.message}</p>
           </div>
-          <div className="col-md-5" style={{position: "absolute", left: 1250, top: 572}}>
+          <div className="col-md-5" style={{position: "absolute", left: windowWidth/2.05, top: 572}}>
             {currentOrder ? (
               <div>
                 <h4>Order #{currentOrder.id}</h4>
@@ -202,7 +210,7 @@ export default class PersonalOrders extends Component {
       );
     } 
       return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>PScription</strong></h1>

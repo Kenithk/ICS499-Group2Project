@@ -5,14 +5,8 @@ class UserDataService {
   getAll() {
     return http.get(`/users/getAll`, { headers: authHeader() });
   }
-  getById(id) {
-    return http.get(`/users/get/id/${id}`, { headers: authHeader() });
-  }
-  getByUsername(username) {
-    return http.get(`/users/get/username/${username}`, { headers: authHeader() });
-  }
-  getByEmail(email) {
-    return http.get(`/users/get/email/${email}`, { headers: authHeader() });
+  getByCriteria(data) {
+    return http.get(`/users/search/${data}`, { headers: authHeader() });
   }
   refreshUser(id) {
     return http.get(`/users/refresh/${id}`, { headers: authHeader() });

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ContentsService from "../services/contents.service";
 import EventBus from "../common/EventBus";
+import UserDataService from "../services/user.service";
 import OrderDataService from "../services/order.service";
 import PScription from "../components/images/logo192.png";
 
@@ -12,6 +13,9 @@ export default class CreateOrder extends Component {
     this.onChangeUserId = this.onChangeUserId.bind(this);
     this.saveOrder = this.saveOrder.bind(this);
     this.newOrder = this.newOrder.bind(this);
+    this.retrieveUsers = this.retrieveUsers.bind(this);
+    this.refreshList = this.refreshList.bind(this);
+    this.setActiveUser = this.setActiveUser.bind(this);
     this.state = {
       content: "",
       id: null,
@@ -19,7 +23,10 @@ export default class CreateOrder extends Component {
       description: "", 
       completed: false,
       userId: "",
-      submitted: false
+      submitted: false,
+      users: [],
+      currentUser: null,
+      currentIndex: -1
     };
   }
 
@@ -43,7 +50,8 @@ export default class CreateOrder extends Component {
         if (error.response && error.response.status === 401) {
           EventBus.dispatch("logout");
         }
-      }
+      },
+      this.retrieveUsers()
     );
   }
 
@@ -99,12 +107,43 @@ export default class CreateOrder extends Component {
       submitted: false
     });
   }
+
+  retrieveUsers() {
+    UserDataService.getAll()
+      .then(response => {
+        this.setState({
+          users: response.data
+        });
+        console.log(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }
+
+  refreshList() {
+    this.retrieveUsers();
+    this.setState({
+      currentUser: null,
+      currentIndex: -1
+    });
+  }
+
+  setActiveUser(user, index) {
+    this.setState({
+      currentUser: user,
+      currentIndex: index,
+      userId: user.id
+    });
+  }
   
   render() {
-    const { content } = this.state;
+    const { content, users, currentIndex } = this.state;
+    const windowWidth = document.documentElement.clientWidth;
+ 
     if (content === "Create Order") {
       return (
-        <div className="form-group">
+        <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>PScription</strong></h1>
@@ -127,7 +166,7 @@ export default class CreateOrder extends Component {
             </div>
           ) : (
             <div>
-              <div className="col-md-4" style={{padding: 0, left: 400, top: 10}}>
+              <div className="col-md-4">
                 <h2><strong>Create new Order</strong></h2>
                 <label htmlFor="title">Title</label>
                 <input
@@ -139,8 +178,6 @@ export default class CreateOrder extends Component {
                   onChange={this.onChangeTitle}
                   name="title"
                 />
-              </div>
-              <div className="col-md-4" style={{padding: 0, left: 400, top: 15}}>
                 <label htmlFor="description">Description</label>
                 <input
                   type="text"
@@ -151,8 +188,6 @@ export default class CreateOrder extends Component {
                   onChange={this.onChangeDescription}
                   name="description"
                 />
-              </div>
-              <div className="col-md-4" style={{padding: 0, left: 400, top: 20}}>
                 <label htmlFor="userId">User ID</label>
                 <input
                   type="text"
@@ -163,19 +198,44 @@ export default class CreateOrder extends Component {
                   onChange={this.onChangeUserId}
                   name="userId"
               />
-              </div>
-              <div className="col-md-8" style={{padding: 0, left: 550, top: 35}}>
+
+              <div className="col-md-4" style={{padding: 0, left: 0, top: 15}}>
               <button onClick={this.saveOrder} className="btn btn-success">
                 Submit
               </button>
               </div>
+              </div>
+            <div className="col-md-2" style={{position: "absolute", left: windowWidth/2.05, top: 572}}>
+            <h4>Users List</h4>
+            <ul className="list-group">
+              {users &&
+                users.map((user, index) => (
+                  <li
+                    className={
+                      "list-group-item " +
+                      (index === currentIndex ? "active" : "")
+                    }
+                    onClick={() => this.setActiveUser(user, index)}
+                    key={index}
+                  >
+                    {user.username}
+                  </li>
+                ))}
+            </ul>
+            <button
+                className="m-3 btn btn-sm btn-primary"
+                onClick={this.refreshList}
+                >
+                  Refresh
+                  </button>
             </div>
+            </div>           
           )}
         </div>
       );
-    } else {
-      return (
-        <div className="container">
+    }
+    return (
+        <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>PScription</strong></h1>
@@ -192,6 +252,6 @@ export default class CreateOrder extends Component {
         </header>
       </div>
       )
-    }  
+      
   }
 }

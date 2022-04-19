@@ -42,10 +42,10 @@ export default class UserProfile extends Component {
     }
 
     const { currentUser } = this.state;
-
+    const windowWidth = document.documentElement.clientWidth;
     if(currentUser.notifications === 0) {
       return (
-        <div className="container">
+        <div className="container" style={{"width": windowWidth}}>
           <header className="jumbotron">
               <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
                 <h1><strong>PScription</strong></h1>

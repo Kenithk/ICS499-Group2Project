@@ -30,8 +30,9 @@ export default class Home extends Component {
   }
 
   render() {
+    const windowWidth = document.documentElement.clientWidth;
     return (
-      <div className="container">
+      <div className="container" style={{"width": windowWidth}}>
         <header className="jumbotron">
         <div className="col-md-8" style={{padding: 0, left: 250, top: 80}}>
         <h1><strong>Welcome to the PScription portal!</strong></h1>
