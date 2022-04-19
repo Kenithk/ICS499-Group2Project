@@ -9,5 +9,6 @@ import com.backend.springjwt.models.*;
 public interface OrderRepository extends JpaRepository<Order, Long> {
         List<Order> findByCompleted(boolean completed);
         List<Order> findByTitleContaining(String title);
+        List<Order> findByDescriptionContaining(String description);
         List<Order> findByUserId(String userId);
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.backend.springjwt.models.*;
 import com.backend.springjwt.repository.*;
 
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
@@ -20,6 +19,16 @@ public class OrderController {
     OrderRepository orderRepository;
     @Autowired
     UserRepository userRepository;
+
+    //Used in the searchOrders() method
+    public static boolean isNumeric(String str) {
+        try {
+          Long.parseLong(str);
+          return true;
+        } catch (NumberFormatException e) {
+          return false;
+        }
+      }
 
     @GetMapping("/orders/getAll")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
@@ -37,6 +46,55 @@ public class OrderController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+
+    @GetMapping("/orders/search/{data}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<List<Order>> searchOrders(@PathVariable("data") String data) {
+        ResponseEntity<List<Order>> orders = null;
+        ResponseEntity<List<Order>> notFound = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (data.equals(null)) {
+            List<Order> _orders = new ArrayList<>();
+            orderRepository.findAll().forEach(_orders::add);
+            return new ResponseEntity<>(_orders, HttpStatus.OK);
+        }
+        if (isNumeric(data)) {
+            if (data.length() == 5) {
+                //Search by Order ID
+                orders = getOrderById(Long.valueOf(data));
+                if (orders.equals(notFound)) {
+                    return notFound;
+                }
+            }
+            if (data.length() == 4) {
+                //Search by User ID
+                orders = getOrderByUserId(data);
+                if (orders.equals(notFound)) {
+                    return notFound;
+                }
+            }
+            return orders;
+            }
+        if (!isNumeric(data)) {
+                try {
+                    //Search by Title
+                    orders = getOrderByTitle(data);
+                    if (orders.equals(notFound)) {
+                        //Search by Description
+                        orders = getOrderByDescription(data);
+                        if (orders.equals(notFound)) {
+                            //Search by Completed
+                            orders = getOrderByCompleted(data);
+                            if (orders.equals(notFound)) {
+                                return notFound;
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                }
+        return orders;
         }
 
     @GetMapping("/orders/get/id/{id}")
@@ -57,21 +115,6 @@ public class OrderController {
         }
 
     //Added by Nicolas - working fine
-    @GetMapping("/orders/get/userid/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or hasRole('USER')")
-    public ResponseEntity<List<Order>> getOrderByUserId(@PathVariable("id") String id) {
-        try {
-            List<Order> orders = orderRepository.findByUserId(id);
-            if (orders.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-    //Added by Nicolas - working fine
     @GetMapping("/orders/get/title/{title}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<Order>> getOrderByTitle(@PathVariable("title") String title) {
@@ -86,11 +129,62 @@ public class OrderController {
             }
         }
 
-    @GetMapping("/orders/get/completed")
+    //Addded by Nicolas - working fine
+    @GetMapping("/orders/get/description/{description}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<List<Order>> getByCompleted() {
+    public ResponseEntity<List<Order>> getOrderByDescription(@PathVariable("description") String description) {
         try {
-            List<Order> orders = orderRepository.findByCompleted(true);
+            List<Order> orders = orderRepository.findByDescriptionContaining(description);
+            if (orders.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+    }
+
+    @GetMapping("/orders/get/completed/{status}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
+    public ResponseEntity<List<Order>> getOrderByCompleted(@PathVariable("status") String status) {
+        List<Order> orders = new ArrayList<>();
+        if (status.equals("Completed") || status.equals("completed")) {
+            try {
+                orders = orderRepository.findByCompleted(true);
+                if (orders.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                } else {
+                    return new ResponseEntity<>(orders, HttpStatus.OK);
+                }
+                } catch (Exception e) {
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+            }
+        if (status.equals("Pending") || status.equals("pending")) {
+            try {
+                orders = orderRepository.findByCompleted(false);
+                if (orders.isEmpty()) {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                } else {
+                    return new ResponseEntity<>(orders, HttpStatus.OK);
+                }
+                } catch (Exception e) {
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+            }
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+            }
+        }
+
+    //Added by Nicolas - working fine
+    @GetMapping("/orders/get/userid/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or hasRole('USER')")
+    public ResponseEntity<List<Order>> getOrderByUserId(@PathVariable("id") String id) {
+        try {
+            List<Order> orders = orderRepository.findByUserId(id);
             if (orders.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

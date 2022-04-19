@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.backend.springjwt.models.*;
 import com.backend.springjwt.repository.*;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -21,9 +21,19 @@ public class UserController {
     @Autowired
     RoleRepository roleRepository;
 
+  //Used in the searchUsers() method
+    public static boolean isNumeric(String str) {
+        try {
+          Long.parseLong(str);
+          return true;
+        } catch (NumberFormatException e) {
+          return false;
+        }
+      }
+
     //Working
     @GetMapping("/users/getAll")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String username) {
         try {
             List<User> users = new ArrayList<>();
@@ -40,10 +50,48 @@ public class UserController {
             }
         }
 
+    @GetMapping("/users/search/{data}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<User>> searchUsers(@PathVariable("data") String data) {
+        ResponseEntity<List<User>> users = null;
+        ResponseEntity<List<User>> notFound = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (data.equals(null)) {
+            List<User> _users = new ArrayList<>();
+            userRepository.findAll().forEach(_users::add);
+            return new ResponseEntity<>(_users, HttpStatus.OK);
+        }
+        if (isNumeric(data)) {
+            if (data.length() == 4) {
+                //Search by User ID
+                users = getUserById(Long.valueOf(data));
+                if (users.equals(notFound)) {
+                    return notFound;
+                }
+            }
+            return users;
+            }
+        if (!isNumeric(data)) {
+                try {
+                    //Search by Username
+                    users = getUserByUsername(data);
+                    if (users.equals(notFound)) {
+                        //Search by Email
+                        users = getUserByEmail(data);
+                        if (users.equals(notFound)) {
+                            return notFound;
+                            }
+                        }
+                    } catch (Exception e) {
+                        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                }
+        return users;
+        }
+
     //Working
     @GetMapping("/users/get/id/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getByUserId(@PathVariable("id") Long id) {
+    public ResponseEntity<List<User>> getUserById(@PathVariable("id") Long id) {
         try {
             Optional<User> user = userRepository.findById(id);
             User _user = user.get();
@@ -62,16 +110,13 @@ public class UserController {
     //Working
     @GetMapping("/users/get/username/{username}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<List<User>> getUserByUsername(@PathVariable("username") String username) {
         try {
-            Optional<User> user = userRepository.findByUsername(username);
-            User _user = user.get();
-            List<User> userAsList = new ArrayList<>();
-            userAsList.add(_user);
-            if (userAsList.isEmpty()) {
+            List<User> users = userRepository.findByUsernameContaining(username);
+            if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(userAsList, HttpStatus.OK);
+                return new ResponseEntity<>(users, HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,16 +126,13 @@ public class UserController {
     //Working
     @GetMapping("/users/get/email/{email}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getByEmail(@PathVariable("email") String email) {
+    public ResponseEntity<List<User>> getUserByEmail(@PathVariable("email") String email) {
         try {
-            Optional<User> user = userRepository.findByEmail(email);
-            User _user = user.get();
-            List<User> userAsList = new ArrayList<>();
-            userAsList.add(_user);
-            if (userAsList.isEmpty()) {
+            List<User> users = userRepository.findByEmailContaining(email);
+            if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                return new ResponseEntity<>(userAsList, HttpStatus.OK);
+                return new ResponseEntity<>(users, HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
