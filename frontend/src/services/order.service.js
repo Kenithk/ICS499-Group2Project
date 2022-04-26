@@ -8,6 +8,9 @@ class OrderDataService {
   getByCriteria(data) {
     return http.get(`/orders/search/${data}`, { headers: authHeader() });
   }
+  getByUserId(id) {
+    return http.get(`/orders/get/userid/${id}`, { headers: authHeader() });
+  }
   create(data) {
     return http.post(`/orders/create`, data, { headers: authHeader() });
   }
